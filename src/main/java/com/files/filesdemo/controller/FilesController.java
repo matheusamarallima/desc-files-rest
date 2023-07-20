@@ -36,7 +36,7 @@ public class FilesController {
     }
 
     @GetMapping("/downloadFiles/{fileName}")
-    public ResponseEntity<Resource> downloadFiles(@PathVariable String fileName, HttpServletRequest request){
+    public ResponseEntity<Resource> downloadFiles(String fileName, HttpServletRequest request){
        Resource resource = filesService.downloadFile(fileName);
        String contentType = filesService.getContentType(request, resource);
 

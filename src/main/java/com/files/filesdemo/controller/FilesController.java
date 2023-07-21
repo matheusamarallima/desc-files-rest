@@ -21,7 +21,6 @@ import javax.servlet.http.HttpServletRequest;
 @AllArgsConstructor
 public class FilesController {
 
-    @Autowired
     private FilesService filesService;
 
     @PostMapping("/upload")
@@ -29,14 +28,14 @@ public class FilesController {
         String fileName = filesService.saveFile(file);
 
         String filePath = ServletUriComponentsBuilder.fromCurrentContextPath()
-                .path("/files/downloadFiles")
+                .path("/files/download/")
                 .path(fileName)
                 .toUriString();
         return new Files(fileName, filePath, file.getContentType(), file.getSize());
     }
 
-    @GetMapping("/downloadFiles/{fileName}")
-    public ResponseEntity<Resource> downloadFiles(String fileName, HttpServletRequest request){
+    @GetMapping("/download/{fileName}")
+    public ResponseEntity<Resource> downloadFiles(@PathVariable String fileName, HttpServletRequest request){
        Resource resource = filesService.downloadFile(fileName);
        String contentType = filesService.getContentType(request, resource);
 

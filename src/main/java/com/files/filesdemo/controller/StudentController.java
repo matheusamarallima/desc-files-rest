@@ -4,6 +4,8 @@ import com.files.filesdemo.entity.Student;
 import com.files.filesdemo.service.StudentService;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -23,8 +25,11 @@ public class StudentController {
     }
 
     @GetMapping("/students")
-    private List<Student> searchAllStudent(){
-        return studentService.searchAllStudent();
+    private Page<Student> searchAllStudent(
+            @RequestParam(defaultValue = "0") Integer page,
+            @RequestParam(defaultValue = "5") Integer itensByPage
+    ){
+        return studentService.searchAllStudent(PageRequest.of(page, itensByPage));
     }
 
     @PostMapping("/students")

@@ -5,10 +5,13 @@ import com.files.filesdemo.repository.StudentRepository;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -31,8 +34,10 @@ public class StudentService {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
     }
 
-    public List<Student> searchAllStudent(){
-        return studentRepository.findAll();
+    public Page<Student> searchAllStudent(
+            PageRequest pageRequest
+    ){
+        return studentRepository.findAll(pageRequest);
     }
 
     public ResponseEntity<Student> addStudent(Student student){

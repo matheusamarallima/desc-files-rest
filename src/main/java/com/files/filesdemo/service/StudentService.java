@@ -13,10 +13,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Service
 @NoArgsConstructor
@@ -41,18 +38,18 @@ public class StudentService {
     }
 
     public ResponseEntity<Student> addStudent(Student student){
-        Student studentFound = student;
-        if(studentRepository.existsById(studentFound.getId())){
+        if(studentRepository.existsByName(student.getName())){
             return ResponseEntity.status(HttpStatus.ALREADY_REPORTED).body(null);
         }
-        studentRepository.save(studentFound);
-        return ResponseEntity.status(HttpStatus.CREATED).body(studentFound);
+        studentRepository.save(student);
+        return ResponseEntity.status(HttpStatus.CREATED).body(student);
     }
 
     public ResponseEntity<Student> updateStudent(Student student){
         if(studentRepository.existsById(student.getId()) == false){
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
         }
+        student.setId(student.getId());
         studentRepository.save(student);
         return ResponseEntity.status(HttpStatus.OK).body(student);
     }

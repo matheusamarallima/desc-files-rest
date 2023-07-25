@@ -1,16 +1,14 @@
 package com.files.filesdemo.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
-@Data
+@Getter @Setter
 public class Address {
 
     @Id

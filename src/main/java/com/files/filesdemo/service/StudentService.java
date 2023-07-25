@@ -57,13 +57,17 @@ public class StudentService {
         return ResponseEntity.status(HttpStatus.CREATED).body(student);
     }
 
-    public ResponseEntity<Student> updateStudent(Student student){
-        if(studentRepository.existsById(student.getId()) == false){
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+    public ResponseEntity<Student> updateStudent(Long id,Student student){
+        if(studentRepository.existsById(id)){
+            student.setId(id);
+            for(Book book : student.getBooks()){
+                book.setStudent(student);
+            }
+            studentRepository.save(student);
+            return ResponseEntity.status(HttpStatus.OK).body(student);
         }
-        student.setId(student.getId());
-        studentRepository.save(student);
-        return ResponseEntity.status(HttpStatus.OK).body(student);
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+
     }
 
     public ResponseEntity<String> deleteStudent(Long id){

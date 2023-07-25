@@ -1,15 +1,14 @@
 package com.files.filesdemo.entity;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.*;
 
 import javax.persistence.*;
 
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
-@Data
+@Getter @Setter
 public class Book {
 
     @Id
@@ -19,5 +18,6 @@ public class Book {
 
     @ManyToOne
     @JoinColumn(name = "student_id", nullable = false)
+    @JsonIgnore
     private Student student;
 }

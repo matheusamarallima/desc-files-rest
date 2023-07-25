@@ -1,6 +1,8 @@
 package com.files.filesdemo.service;
 
+import com.files.filesdemo.entity.Book;
 import com.files.filesdemo.entity.Student;
+import com.files.filesdemo.repository.BooksRepository;
 import com.files.filesdemo.repository.StudentRepository;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
@@ -22,6 +24,8 @@ public class StudentService {
 
     @Autowired
     private StudentRepository studentRepository;
+    @Autowired
+    private BooksRepository booksRepository;
 
     public ResponseEntity<Student> searchStudentById(Long id){
 
@@ -41,6 +45,14 @@ public class StudentService {
         if(studentRepository.existsByName(student.getName())){
             return ResponseEntity.status(HttpStatus.ALREADY_REPORTED).body(null);
         }
+        Set<Book> bookSet = student.getBooks();
+        student.setBooks(new HashSet<>());
+        Student student1 = studentRepository.save(student);
+        for(Book book : bookSet){
+            book.setStudent(Student.builder().id(student.getId()).build());
+            student.getBooks().add(booksRepository.save(book));
+        }
+
         studentRepository.save(student);
         return ResponseEntity.status(HttpStatus.CREATED).body(student);
     }

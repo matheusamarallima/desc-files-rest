@@ -18,7 +18,7 @@ public class StudentController {
     @Autowired
     private StudentService studentService;
 
-    @GetMapping("students/{id}")
+    @GetMapping("/students/{id}")
     private ResponseEntity<Student> searchStudentById(@PathVariable Long id){
         return studentService.searchStudentById(id);
 
@@ -37,17 +37,17 @@ public class StudentController {
         return studentService.addStudent(student);
     }
 
-    @PutMapping("students/{id}")
+    @PutMapping("/students/{id}")
     private ResponseEntity<Student> updateStudent(@PathVariable Long id, @RequestBody Student student){
         return studentService.updateStudent(id, student);
     }
 
-    @DeleteMapping("students/{id}")
+    @DeleteMapping("/students/{id}")
     private ResponseEntity<String> deleteStudent(@PathVariable Long id) {
         return studentService.deleteStudent(id);
     }
 
-    @GetMapping("studentsWithoutEvaluations")
+    @GetMapping("/studentsWithoutEvaluations")
     private List<Student> studentsWt(){
         return studentService.findAllStudentsWithoutEvaluations();
     }

@@ -77,4 +77,8 @@ public class StudentService {
         studentRepository.deleteById(id);
         return ResponseEntity.status(HttpStatus.OK).body("deleted successfully");
     }
+
+    public List<Student> findAllStudentsWithoutEvaluations() {
+        return studentRepository.findByCourseEvaluationsStudentIsNull();
+    }
 }

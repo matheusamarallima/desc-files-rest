@@ -46,4 +46,9 @@ public class StudentController {
     private ResponseEntity<String> deleteStudent(@PathVariable Long id) {
         return studentService.deleteStudent(id);
     }
+
+    @GetMapping("studentsWithoutEvaluations")
+    private List<Student> studentsWt(){
+        return studentService.findAllStudentsWithoutEvaluations();
+    }
 }

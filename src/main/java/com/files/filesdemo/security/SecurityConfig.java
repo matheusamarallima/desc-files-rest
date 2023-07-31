@@ -8,10 +8,14 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.oauth2.core.DelegatingOAuth2TokenValidator;
+import org.springframework.security.oauth2.core.OAuth2Error;
 import org.springframework.security.oauth2.core.OAuth2TokenValidator;
-import org.springframework.security.oauth2.jwt.*;
-import org.springframework.security.web.SecurityFilterChain;
-
+import org.springframework.security.oauth2.core.OAuth2TokenValidatorResult;
+import org.springframework.security.oauth2.jwt.Jwt;
+import org.springframework.security.oauth2.jwt.JwtDecoder;
+import org.springframework.security.oauth2.jwt.JwtDecoders;
+import org.springframework.security.oauth2.jwt.JwtValidators;
+import org.springframework.security.oauth2.jwt.NimbusJwtDecoder;
 
 @Configuration
 @EnableWebSecurity
@@ -20,26 +24,15 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
-                .authorizeRequests()
-//                .antMatchers("/**").permitAll() // Permite acesso livre a URLs públicas
-                .antMatchers("/files/upload").permitAll() // Permite acesso livre ao endpoint /files/upload
-                .anyRequest().authenticated() // Exige autenticação para outras URLs
-//                .and()
-//                .formLogin() // Configuração de login de formulário
-//                .loginPage("/login") // Página personalizada de login (opcional)
-//                .defaultSuccessUrl("/dashboard") // Página de redirecionamento após o login bem-sucedido
-//                .permitAll() // Permite acesso livre à página de login
-//                .and()
-//                .logout() // Configuração de logout
-//                .logoutUrl("/logout") // URL para realizar logout
-//                .logoutSuccessUrl("/login?logout") // Página de redirecionamento após logout bem-sucedido
-//                .permitAll() // Permite acesso livre à página de logout
+                .csrf().disable() // Desabilita a proteção CSRF (Cross-Site Request Forgery)
+                .authorizeRequests() // Configura a autorização das requisições
+                .antMatchers("/files/upload").permitAll() // Permite acesso livre ao endpoint /files/upload sem autenticação
+                .anyRequest().authenticated() // Exige autenticação para todas as outras URLs/endpoints
                 .and()
-                .httpBasic()
+                .cors() // Configuração do suporte a CORS (Cross-Origin Resource Sharing)
                 .and()
-                .cors()
-                .and()
-                .csrf().disable(); // Configuração CSRF ativada (proteção contra ataques CSRF)
+                .oauth2ResourceServer() // Habilita o suporte ao OAuth 2.0 Resource Server (servidor de recursos)
+                .jwt(); // Configuração do suporte a autenticação baseada em tokens JWT (JSON Web Token)
     }
 
     @Value("${auth0.audience}")
@@ -50,8 +43,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Bean
     JwtDecoder jwtDecoder() {
-        NimbusJwtDecoder jwtDecoder = (NimbusJwtDecoder)
-                JwtDecoders.fromOidcIssuerLocation(issuer);
+        NimbusJwtDecoder jwtDecoder = (NimbusJwtDecoder) JwtDecoders.fromOidcIssuerLocation(issuer);
 
         OAuth2TokenValidator<Jwt> audienceValidator = new AudienceValidator(audience);
         OAuth2TokenValidator<Jwt> withIssuer = JwtValidators.createDefaultWithIssuer(issuer);
@@ -62,4 +54,3 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         return jwtDecoder;
     }
 }
-

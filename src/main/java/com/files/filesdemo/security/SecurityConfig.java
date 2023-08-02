@@ -8,9 +8,7 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.oauth2.core.DelegatingOAuth2TokenValidator;
-import org.springframework.security.oauth2.core.OAuth2Error;
 import org.springframework.security.oauth2.core.OAuth2TokenValidator;
-import org.springframework.security.oauth2.core.OAuth2TokenValidatorResult;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.security.oauth2.jwt.JwtDecoder;
 import org.springframework.security.oauth2.jwt.JwtDecoders;
@@ -27,13 +25,14 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .csrf().disable() // Desabilita a proteção CSRF (Cross-Site Request Forgery)
                 .authorizeRequests() // Configura a autorização das requisições
                 .antMatchers("/files/upload").permitAll() // Permite acesso livre ao endpoint /files/upload sem autenticação
-                .anyRequest().authenticated() // Exige autenticação para todas as outras URLs/endpoints
+//                .anyRequest().authenticated() // Exige autenticação para todas as outras URLs/endpoints
                 .and()
                 .cors() // Configuração do suporte a CORS (Cross-Origin Resource Sharing)
                 .and()
                 .oauth2ResourceServer() // Habilita o suporte ao OAuth 2.0 Resource Server (servidor de recursos)
                 .jwt(); // Configuração do suporte a autenticação baseada em tokens JWT (JSON Web Token)
     }
+
 
     @Value("${auth0.audience}")
     private String audience;
